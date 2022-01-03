@@ -1,9 +1,8 @@
 # iq-distance
 A sandbox/solver for the `Central Point` IQ test
 ## Table of contents
-- [iq-distance](#iq-distance)
-  * [What is this?](#what-is-this-)
-  * [Why is this?](#why-is-this-)
+  * [What is this?](#what-is-this)
+  * [Why is this?](#why-is-this)
   * [Live version](#live-version)
   * [Comparisons](#comparisons)
 
