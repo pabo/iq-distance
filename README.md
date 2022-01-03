@@ -5,6 +5,7 @@ This is an interactive solver for the `Central Point` subtest of the [FSIQ test]
 > For example, in the grid below, what point is closest to all three green points at the same time?
 > 
 > ![example](images/test1.png)
+> 
 > Two possible answers are below. Blue lines have been added to show how good each is.
 > 
 > ![answer1](images/test2.png) ![answer2](images/test3.png)
@@ -20,8 +21,7 @@ Given this confusion, plus my own curiosity of how different patterns would chan
 
 
 ## Live version
-This is hosted on github pages here: [http://pabo.github.io/iq-distance]
-
+This is hosted on github pages [here](http://pabo.github.io/iq-distance)
 ## Comparisons
 Below are the comparisons between my sandbox and their given answers, all of which match up.
 ![problem #1 comparison](images/01.png)
