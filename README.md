@@ -3,9 +3,12 @@ This is an interactive solver for the `Central Point` subtest of the [FSIQ test]
 
 > In this task you will be given a grid with some points shaded in green. You will need to select the point that is most in the middle of all of them. The one that has the lowest average distance from it to each of the green points.
 > For example, in the grid below, what point is closest to all three green points at the same time?
+> 
 > ![example](images/test1.png)
 > Two possible answers are below. Blue lines have been added to show how good each is.
+> 
 > ![answer1](images/test2.png) ![answer2](images/test3.png)
+> 
 > The total length of the blue lines on the left is 11 and it is 12.4 on the right, so the one on the left is the best answer of these two (it is also the best possible in this case).
 > You do not have to select the perfect answer, you will get partial credit for answers that are close.
 
