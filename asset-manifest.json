@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/iq-distance/static/css/main.11722285.css",
+    "main.js": "/iq-distance/static/js/main.24bbc289.js",
+    "static/js/787.5060473b.chunk.js": "/iq-distance/static/js/787.5060473b.chunk.js",
+    "index.html": "/iq-distance/index.html",
+    "main.11722285.css.map": "/iq-distance/static/css/main.11722285.css.map",
+    "main.24bbc289.js.map": "/iq-distance/static/js/main.24bbc289.js.map",
+    "787.5060473b.chunk.js.map": "/iq-distance/static/js/787.5060473b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11722285.css",
+    "static/js/main.24bbc289.js"
+  ]
+}
