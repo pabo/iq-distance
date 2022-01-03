@@ -1,15 +1,28 @@
 .square, .square-enabled {
-  height: 20px;
-  width: 20px;
+  height: 32px;
+  width: 32px;
   border: 1px solid black;
   margin: 1px;
-  display: inline-block;
-}
-
-.square {
-  background-color: white;
+  font-size: .5em;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .square-enabled {
-  background-color: black;
+  background-color: green !important;
+}
+
+.flexDiv {
+  display: flex;
+}
+
+.minimum {
+  border: 5px solid red !important;
+}
+
+body {
+  margin: 20px;
 }
