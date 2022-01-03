@@ -1,4 +1,13 @@
 # iq-distance
+A sandbox/solver for the `Central Point` IQ test
+## Table of contents
+- [iq-distance](#iq-distance)
+  * [What is this?](#what-is-this-)
+  * [Why is this?](#why-is-this-)
+  * [Live version](#live-version)
+  * [Comparisons](#comparisons)
+
+## What is this?
 This is an interactive solver for the `Central Point` subtest of the [FSIQ test](https://openpsychometrics.org/tests/FSIQ/1.php). The description for this section of the test reads as follows:
 
 > In this task you will be given a grid with some points shaded in green. You will need to select the point that is most in the middle of all of them. The one that has the lowest average distance from it to each of the green points.
@@ -13,12 +22,12 @@ This is an interactive solver for the `Central Point` subtest of the [FSIQ test]
 > The total length of the blue lines on the left is 11 and it is 12.4 on the right, so the one on the left is the best answer of these two (it is also the best possible in this case).
 > You do not have to select the perfect answer, you will get partial credit for answers that are close.
 
+## Why is this?
 While it is true that the above example is solved by their first possible answer (on the left), their displayed values are incorrect. The correct values are shown here:
 
 ![corrected math](images/comp1.png)
 
 Given this confusion, plus my own curiosity of how different patterns would change the central point, I created this sandbox.
-
 
 ## Live version
 This is hosted on github pages [here](http://pabo.github.io/iq-distance)
