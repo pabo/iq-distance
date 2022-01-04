@@ -7,7 +7,7 @@ const DEFAULT_GRID_SIZE = 15;
 const MAX_GRID_SIZE = 40;
 const buttonShortcutSizes = [5, 10, 15, 20, 30, 40];
 
-const createEmptyGrid = (size) => {
+const getEmptyGrid = (size) => {
   let emptyGrid = [];
   for (let i = 0; i < size; i++) {
     emptyGrid.push(new Array(size).fill(false));
@@ -36,7 +36,7 @@ const getResizedGrid = (grid, size) => {
     // remove columns
     newGrid.forEach((row) => row.splice(size, oldSize - size));
 
-    //remove rows
+    // remove rows
     newGrid.splice(size, oldSize - size);
   }
 
@@ -52,7 +52,7 @@ const distanceBetween = (x1, y1, x2, y2) => {
 
 // create a grid of distances, while keeping track of the min and max
 const calculateDistanceGrid = (grid) => {
-  const distanceGrid = createEmptyGrid(grid.length);
+  const distanceGrid = getEmptyGrid(grid.length);
   let minDistance = Number.MAX_SAFE_INTEGER;
   let maxDistance = 0;
 
@@ -94,7 +94,7 @@ const calculateDistanceGrid = (grid) => {
 export const App = () => {
   const [gridSize, setGridSize] = useState(DEFAULT_GRID_SIZE);
   const [gridSizeDisplay, setGridSizeDisplay] = useState(DEFAULT_GRID_SIZE);
-  const [grid, setGrid] = useState(createEmptyGrid(gridSize));
+  const [grid, setGrid] = useState(getEmptyGrid(gridSize));
   const [dragMeansSelect, setDragMeansSelect] = useState(true);
   const distances = calculateDistanceGrid(grid);
   const gridIsEmpty = !grid.some((row) => row.some((square) => !!square));
@@ -144,7 +144,7 @@ export const App = () => {
   };
 
   const handleResetClick = () => {
-    setGrid(createEmptyGrid(gridSize));
+    setGrid(getEmptyGrid(gridSize));
   };
 
   return (
