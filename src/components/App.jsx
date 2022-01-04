@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import { Row } from "./Row";
 
+const DEFAULT_GRID_SIZE = 15;
 const createEmptyGrid = (size) => {
   let emptyGrid = [];
   for (let i = 0; i < size; i++) {
@@ -21,10 +22,10 @@ const calculateDistanceGrid = (grid) => {
       let totalDistance = 0;
 
       grid.forEach((gridRow, gridRowIndex) => {
-        gridRow.forEach((gridSquare, gridSquareIndex) => {
-          if (gridSquare) {
+        gridRow.forEach((squareIsSelected, squareIndex) => {
+          if (squareIsSelected) {
             const rowDiff = gridRowIndex - rowIndex;
-            const colDiff = gridSquareIndex - colIndex;
+            const colDiff = squareIndex - colIndex;
             const distance = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
             totalDistance += distance;
           }
@@ -50,15 +51,16 @@ const calculateDistanceGrid = (grid) => {
 };
 
 export const App = () => {
-  const [gridSize, setGridSize] = useState(15);
+  const [gridSize, setGridSize] = useState(DEFAULT_GRID_SIZE);
   const [grid, setGrid] = useState(createEmptyGrid(gridSize));
+  const [dragMeansSelect, setDragMeansSelect] = useState(true);
   const distances = calculateDistanceGrid(grid);
   const gridIsEmpty = !grid.some((row) => row.some((square) => !!square));
 
-  const toggleSquare = (rowIndex, colIndex) => {
+  const toggleSquare = (rowIndex, colIndex, dragged ) => {
     setGrid((prevGrid) => {
       const gridCopy = _.cloneDeep(prevGrid);
-      gridCopy[rowIndex][colIndex] = !gridCopy[rowIndex][colIndex];
+      gridCopy[rowIndex][colIndex] = dragged ? dragMeansSelect : !gridCopy[rowIndex][colIndex];
       return gridCopy;
     });
   };
@@ -88,6 +90,7 @@ export const App = () => {
             grid={grid}
             distances={distances}
             toggleSquare={toggleSquare}
+            setDragMeansSelect={setDragMeansSelect}
           />
         );
       })}
