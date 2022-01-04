@@ -2,54 +2,8 @@ import React, { useState } from "react";
 import "./App.css";
 import _ from "lodash";
 
-const handleSquareClick = (e, rowIndex, colIndex, setGrid) => {
-  setGrid((prevGrid) => {
-    const gridCopy = _.cloneDeep(prevGrid);
-    gridCopy[rowIndex][colIndex] = !gridCopy[rowIndex][colIndex];
-    return gridCopy;
-  });
-};
 
-const calculateDistanceGrid = (grid) => {
-  const distanceGrid = _.cloneDeep(grid); // lazy way to get the right size grid
-  let minDistance = 255;
-  let maxDistance = 0;
-
-  grid.forEach((row, rowIndex) => {
-    row.forEach((square, colIndex) => {
-      let distance = 0;
-
-      grid.forEach((gridRow, gridRowIndex) => {
-        gridRow.forEach((gridSquare, gridSquareIndex) => {
-          if (gridSquare) {
-            const rowDiff = gridRowIndex - rowIndex;
-            const colDiff = gridSquareIndex - colIndex;
-            const hypotenuse = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
-            distance += hypotenuse;
-          }
-        });
-      });
-
-      const truncDistance = parseFloat(distance.toFixed(2));
-
-      distanceGrid[rowIndex][colIndex] = truncDistance;
-
-      // only set max and min if this square isnt selected
-      if (!square) {
-        maxDistance = Math.max(truncDistance, maxDistance);
-        minDistance = Math.min(truncDistance, minDistance);
-      }
-    });
-  });
-
-  return {
-    distanceGrid,
-    minDistance,
-    maxDistance,
-  };
-};
-
-const Square = ({ enabled, rowIndex, colIndex, setGrid, distances }) => {
+const Square = ({ selected, rowIndex, colIndex, toggleSquare, distances }) => {
   const { maxDistance, minDistance, distanceGrid } = distances;
   const thisDistance = distanceGrid[rowIndex][colIndex];
 
@@ -60,14 +14,14 @@ const Square = ({ enabled, rowIndex, colIndex, setGrid, distances }) => {
   const colorString = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
 
   const classNames = `
-    ${enabled ? "square-enabled" : "square"} 
+    ${selected ? "square-selected" : "square"} 
     ${thisDistance === minDistance ? "minimum" : ""}
   `;
 
   return (
     <div
       className={classNames}
-      onClick={(e) => handleSquareClick(e, rowIndex, colIndex, setGrid)}
+      onClick={() => toggleSquare(rowIndex, colIndex)}
       style={{ backgroundColor: colorString }}
     >
       {thisDistance}
@@ -75,7 +29,7 @@ const Square = ({ enabled, rowIndex, colIndex, setGrid, distances }) => {
   );
 };
 
-const Row = ({ rowData, rowIndex, grid, setGrid, distances }) => {
+const Row = ({ rowData, rowIndex, toggleSquare, distances }) => {
   return (
     <div className="flexDiv">
       {rowData.map((data, colIndex) => {
@@ -83,11 +37,10 @@ const Row = ({ rowData, rowIndex, grid, setGrid, distances }) => {
           <Square
             key={colIndex}
             distances={distances}
-            setGrid={setGrid}
-            grid={grid}
+            toggleSquare={toggleSquare}
             rowIndex={rowIndex}
             colIndex={colIndex}
-            enabled={!!data}
+            selected={!!data}
           />
         );
       })}
@@ -96,6 +49,14 @@ const Row = ({ rowData, rowIndex, grid, setGrid, distances }) => {
 };
 
 const Grid = () => {
+  const toggleSquare = (rowIndex, colIndex) => {
+    setGrid((prevGrid) => {
+      const gridCopy = _.cloneDeep(prevGrid);
+      gridCopy[rowIndex][colIndex] = !gridCopy[rowIndex][colIndex];
+      return gridCopy;
+    });
+  };
+
   const createEmptyGrid = (size) => {
     let emptyGrid = [];
     for (let i = 0; i < size; i++) {
@@ -104,6 +65,44 @@ const Grid = () => {
 
     return emptyGrid;
   };
+
+ const calculateDistanceGrid = () => {
+  const distanceGrid = createEmptyGrid(gridSize);
+  let minDistance = 255;
+  let maxDistance = 0;
+
+  grid.forEach((row, rowIndex) => {
+    row.forEach((square, colIndex) => {
+      let totalDistance = 0;
+
+      grid.forEach((gridRow, gridRowIndex) => {
+        gridRow.forEach((gridSquare, gridSquareIndex) => {
+          if (gridSquare) {
+            const rowDiff = gridRowIndex - rowIndex;
+            const colDiff = gridSquareIndex - colIndex;
+            const distance = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
+            totalDistance += distance;
+          }
+        });
+      });
+
+      const distanceDisplay = parseFloat(totalDistance.toFixed(2));
+      distanceGrid[rowIndex][colIndex] = distanceDisplay;
+
+      // don't consider this square for max and min if its selected
+      if (!square) {
+        maxDistance = Math.max(distanceDisplay, maxDistance);
+        minDistance = Math.min(distanceDisplay, minDistance);
+      }
+    });
+  });
+
+  return {
+    distanceGrid,
+    minDistance,
+    maxDistance,
+  };
+};
 
   const handleResetClick = () => {
     setGrid(createEmptyGrid(gridSize));
@@ -131,7 +130,7 @@ const Grid = () => {
         return (
           <Row
             key={rowIndex}
-            setGrid={setGrid}
+            toggleSquare={toggleSquare}
             grid={grid}
             distances={distances}
             rowData={row}
