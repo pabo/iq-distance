@@ -1,14 +1,19 @@
 .square, .square-enabled {
   height: 32px;
-  width: 32px;
+  flex-basis: 32px;
   border: 1px solid black;
   margin: 1px;
   font-size: .5em;
   display: flex;
+  text-align: center;
   justify-content: center;
   align-content: center;
   flex-direction: column;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
+  cursor: default;
+  user-select: none;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .square-enabled {
@@ -19,8 +24,10 @@
   display: flex;
 }
 
-.minimum {
+.nonEmptyGrid .minimum {
   border: 5px solid red !important;
+  flex-basis: 24px;
+  height: 24px;
 }
 
 body {

@@ -48,7 +48,6 @@ const calculateDistanceGrid = (grid) => {
     minDistance,
     maxDistance
   };
-
 }
 
 const Square = ({enabled, rowIndex, colIndex, setGrid, distances}) => {
@@ -58,7 +57,7 @@ const Square = ({enabled, rowIndex, colIndex, setGrid, distances}) => {
   const zeroedMax = maxDistance - minDistance;
   const zeroedThis = thisDistance - minDistance;
   const percentThis = zeroedThis / zeroedMax;
-  const colorValue = 255 - 255 * percentThis;
+  const colorValue = percentThis ? 255 - (255 * percentThis) : 255;
   const colorString = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
 
   const classNames = `
@@ -69,7 +68,7 @@ const Square = ({enabled, rowIndex, colIndex, setGrid, distances}) => {
   return <div
     className={classNames}
     onClick={(e) => handleSquareClick(e, rowIndex, colIndex, setGrid)}
-    style={{"background-color": colorString}}>
+    style={{backgroundColor: colorString}}>
       { thisDistance }
     </div>
 }
@@ -77,40 +76,47 @@ const Square = ({enabled, rowIndex, colIndex, setGrid, distances}) => {
 const Row = ({rowData, rowIndex, grid, setGrid, distances}) => {
   return <div className="flexDiv">
     {rowData.map((data, colIndex) => {
-      return <Square distances={distances} setGrid={setGrid} grid={grid} rowIndex={rowIndex} colIndex={colIndex} enabled={!!data} />
+      return <Square key={colIndex} distances={distances} setGrid={setGrid} grid={grid} rowIndex={rowIndex} colIndex={colIndex} enabled={!!data} />
     })}
   </div>
 }
 
 const Grid = () => {
-  const emptyGrid = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  ];
+  const createEmptyGrid = (size) => {
+    let emptyGrid = [];
+    for (let i = 0; i < size; i++) {
+      emptyGrid.push(new Array(size).fill(0));
+    }
 
-  const [grid, setGrid] = useState(emptyGrid);
+    return emptyGrid;
+  };
+
+  const handleResetClick = () => {
+    setGrid(createEmptyGrid(gridSize));
+  }
+
+  const handleGridSizeChange = (e) => {
+    let size = parseInt(e.target.value, 10);
+    if (!size) {
+      size = 0;
+    }
+
+    setGridSize(size);
+    setGrid(createEmptyGrid(size));
+  }
+
+  const [gridSize, setGridSize] = useState(15);
+  const [grid, setGrid] = useState(createEmptyGrid(gridSize));
   const distances = calculateDistanceGrid(grid);
 
-  // const {maxDistance, minDistance, distanceGrid} = distances;
+  const gridIsEmpty = (!grid.some(row => row.some(square => !!square)));
 
-  return <div>
+  return <div className={gridIsEmpty ? "" : "nonEmptyGrid"}>
     {grid.map((row, rowIndex) => {
-      return <Row setGrid={setGrid} grid={grid} distances={distances} rowData={row} rowIndex={rowIndex} />
+      return <Row key={rowIndex} setGrid={setGrid} grid={grid} distances={distances} rowData={row} rowIndex={rowIndex} />
     })}
-    <button onClick={() => setGrid(emptyGrid)}>Reset Grid</button>
+    <br/>Grid size: <input value={gridSize} onChange={handleGridSizeChange}/>
+    <br/><button onClick={handleResetClick}>Reset Grid</button>
   </div>
 }
 
