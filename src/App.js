@@ -68,7 +68,7 @@ const Grid = () => {
 
  const calculateDistanceGrid = () => {
   const distanceGrid = createEmptyGrid(gridSize);
-  let minDistance = 255;
+  let minDistance = 99999999;
   let maxDistance = 0;
 
   grid.forEach((row, rowIndex) => {
