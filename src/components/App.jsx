@@ -4,6 +4,8 @@ import { Row } from "./Row";
 
 const DEFAULT_GRID_SIZE = 15;
 const MAX_GRID_SIZE = 40;
+const MIN_GRID_SIZE = 3;
+const buttonShortcutSizes = [5,10,15,20,30,40];
 
 const createEmptyGrid = (size) => {
   let emptyGrid = [];
@@ -71,7 +73,7 @@ export const App = () => {
 
   // only allow validated values for grid size
   const protectedSetGridSize = (size) => {
-    setGridSize(Math.min(size, MAX_GRID_SIZE));
+    setGridSize(Math.max(MIN_GRID_SIZE,Math.min(size, MAX_GRID_SIZE)));
   }
 
   // without the third arg, its a pure toggle. with the third arg, we set the value based on 
@@ -112,9 +114,11 @@ export const App = () => {
   return (
     <div className={gridIsEmpty ? "" : "nonEmptyGrid"}>
       <div className="controls flexDiv">
-        <button className="control" onClick={() => setGridSize(5)}>5x5</button>
-        <button className="control" onClick={() => setGridSize(10)}>10x10</button>
-        <button className="control" onClick={() => setGridSize(15)}>15x15</button>
+        <button className="control" onClick={() => protectedSetGridSize(gridSize-1)}>-</button>
+        {buttonShortcutSizes.map(size =>
+          <button key="size" className="control" onClick={() => protectedSetGridSize(size)}>{size}x{size}</button>
+        )}
+        <button className="control" onClick={() => protectedSetGridSize(gridSize+1)}>+</button>
         <div className="control">
           <input
             value={gridSizeDisplay}
