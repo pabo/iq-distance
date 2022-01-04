@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./App.css";
 import _ from "lodash";
 
-
 const Square = ({ selected, rowIndex, colIndex, toggleSquare, distances }) => {
   const { maxDistance, minDistance, distanceGrid } = distances;
   const thisDistance = distanceGrid[rowIndex][colIndex];
@@ -66,43 +65,43 @@ const Grid = () => {
     return emptyGrid;
   };
 
- const calculateDistanceGrid = () => {
-  const distanceGrid = createEmptyGrid(gridSize);
-  let minDistance = 99999999;
-  let maxDistance = 0;
+  const calculateDistanceGrid = () => {
+    const distanceGrid = createEmptyGrid(gridSize);
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let maxDistance = 0;
 
-  grid.forEach((row, rowIndex) => {
-    row.forEach((square, colIndex) => {
-      let totalDistance = 0;
+    grid.forEach((row, rowIndex) => {
+      row.forEach((square, colIndex) => {
+        let totalDistance = 0;
 
-      grid.forEach((gridRow, gridRowIndex) => {
-        gridRow.forEach((gridSquare, gridSquareIndex) => {
-          if (gridSquare) {
-            const rowDiff = gridRowIndex - rowIndex;
-            const colDiff = gridSquareIndex - colIndex;
-            const distance = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
-            totalDistance += distance;
-          }
+        grid.forEach((gridRow, gridRowIndex) => {
+          gridRow.forEach((gridSquare, gridSquareIndex) => {
+            if (gridSquare) {
+              const rowDiff = gridRowIndex - rowIndex;
+              const colDiff = gridSquareIndex - colIndex;
+              const distance = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
+              totalDistance += distance;
+            }
+          });
         });
+
+        const distanceDisplay = parseFloat(totalDistance.toFixed(2));
+        distanceGrid[rowIndex][colIndex] = distanceDisplay;
+
+        // don't consider this square for max and min if its selected
+        if (!square) {
+          maxDistance = Math.max(distanceDisplay, maxDistance);
+          minDistance = Math.min(distanceDisplay, minDistance);
+        }
       });
-
-      const distanceDisplay = parseFloat(totalDistance.toFixed(2));
-      distanceGrid[rowIndex][colIndex] = distanceDisplay;
-
-      // don't consider this square for max and min if its selected
-      if (!square) {
-        maxDistance = Math.max(distanceDisplay, maxDistance);
-        minDistance = Math.min(distanceDisplay, minDistance);
-      }
     });
-  });
 
-  return {
-    distanceGrid,
-    minDistance,
-    maxDistance,
+    return {
+      distanceGrid,
+      minDistance,
+      maxDistance,
+    };
   };
-};
 
   const handleResetClick = () => {
     setGrid(createEmptyGrid(gridSize));
