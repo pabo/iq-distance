@@ -1,7 +1,13 @@
 import React from "react";
 import { Square } from "./Square";
 
-export const Row = ({ rowIndex, rowData, distances, toggleSquare, setDragMeansSelect }) => {
+export const Row = ({
+  rowIndex,
+  rowData,
+  distances,
+  toggleSquare,
+  setDragMeansSelect,
+}) => {
   return (
     <div className="flexDiv">
       {rowData.map((selected, colIndex) => {

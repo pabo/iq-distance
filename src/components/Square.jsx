@@ -8,7 +8,7 @@ export const Square = ({
   colIndex,
   toggleSquare,
   distances,
-  setDragMeansSelect
+  setDragMeansSelect,
 }) => {
   const { maxDistance, minDistance, distanceGrid } = distances;
   const thisDistance = distanceGrid[rowIndex][colIndex];
@@ -16,7 +16,9 @@ export const Square = ({
   const zeroedMax = maxDistance - minDistance;
   const zeroedThis = thisDistance - minDistance;
   const percentThis = zeroedThis / zeroedMax;
-  const colorValue = percentThis ? COLOR_SPACE_MAX - COLOR_SPACE_MAX * percentThis : COLOR_SPACE_MAX;
+  const colorValue = percentThis
+    ? COLOR_SPACE_MAX - COLOR_SPACE_MAX * percentThis
+    : COLOR_SPACE_MAX;
   const colorString = `rgb(${colorValue}, ${colorValue}, ${colorValue})`;
 
   const classNames = `
@@ -27,15 +29,14 @@ export const Square = ({
   const handleMouseDown = () => {
     toggleSquare(rowIndex, colIndex);
     setDragMeansSelect(!selected);
-  }
+  };
 
   const handleMouseEnter = (e) => {
     if (e.buttons === 1) {
       toggleSquare(rowIndex, colIndex, true);
     }
-  }
- 
-  
+  };
+
   return (
     <div
       className={classNames}
