@@ -21,6 +21,10 @@
   background-color: green !important;
 }
 
+.controls {
+  margin-bottom: 1em;
+}
+
 .flexDiv {
   display: flex;
 }
@@ -33,4 +37,13 @@
 
 body {
   margin: 20px;
+}
+
+input {
+  width: 1.5em; 
+  text-align: center;
+}
+
+.control {
+  margin-right: 2em;
 }

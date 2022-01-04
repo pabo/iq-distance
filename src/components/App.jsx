@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { Row } from "./Row";
 
 const DEFAULT_GRID_SIZE = 15;
+const MAX_GRID_SIZE = 40;
+
 const createEmptyGrid = (size) => {
   let emptyGrid = [];
   for (let i = 0; i < size; i++) {
@@ -11,6 +13,12 @@ const createEmptyGrid = (size) => {
 
   return emptyGrid;
 };
+
+const distanceBetween = (x1, y1, x2, y2) => {
+  const xDiff = x1 - x2;
+  const yDiff = y1 - y2;
+  return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+}
 
 const calculateDistanceGrid = (grid) => {
   const distanceGrid = createEmptyGrid(grid.length);
@@ -24,10 +32,7 @@ const calculateDistanceGrid = (grid) => {
       grid.forEach((gridRow, gridRowIndex) => {
         gridRow.forEach((squareIsSelected, squareIndex) => {
           if (squareIsSelected) {
-            const rowDiff = gridRowIndex - rowIndex;
-            const colDiff = squareIndex - colIndex;
-            const distance = Math.sqrt(rowDiff * rowDiff + colDiff * colDiff);
-            totalDistance += distance;
+            totalDistance += distanceBetween(gridRowIndex, squareIndex, rowIndex, colIndex);
           }
         });
       });
@@ -52,11 +57,25 @@ const calculateDistanceGrid = (grid) => {
 
 export const App = () => {
   const [gridSize, setGridSize] = useState(DEFAULT_GRID_SIZE);
+  const [gridSizeDisplay, setGridSizeDisplay] = useState(DEFAULT_GRID_SIZE);
   const [grid, setGrid] = useState(createEmptyGrid(gridSize));
   const [dragMeansSelect, setDragMeansSelect] = useState(true);
   const distances = calculateDistanceGrid(grid);
   const gridIsEmpty = !grid.some((row) => row.some((square) => !!square));
 
+  // any time we set the grid size, update the display grid size and the grid itself
+  useEffect(() => {
+    setGridSizeDisplay(gridSize);
+    setGrid(createEmptyGrid(gridSize));
+  }, [gridSize]);
+
+  // only allow validated values for grid size
+  const protectedSetGridSize = (size) => {
+    setGridSize(Math.min(size, MAX_GRID_SIZE));
+  }
+
+  // without the third arg, its a pure toggle. with the third arg, we set the value based on 
+  // whether this dragging instance should be selecting or de-selecting squares
   const toggleSquare = (rowIndex, colIndex, dragged ) => {
     setGrid((prevGrid) => {
       const gridCopy = _.cloneDeep(prevGrid);
@@ -65,22 +84,54 @@ export const App = () => {
     });
   };
 
+  const handleGridSizeChange = (e) => {
+    let size = parseInt(e.target.value, 10);
+    if (!size) {
+      size = '';
+    }
+
+    setGridSizeDisplay(size);
+  };
+
+  // 'enter' causes submit
+  const handleGridSizeKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      protectedSetGridSize(gridSizeDisplay);
+    }
+  }
+
+  // tabbing or clicking out causes submit
+  const handleGridSizeBlur = () => {
+    protectedSetGridSize(gridSizeDisplay);
+  }
+
   const handleResetClick = () => {
     setGrid(createEmptyGrid(gridSize));
   };
 
-  const handleGridSizeChange = (e) => {
-    let size = parseInt(e.target.value, 10);
-    if (!size) {
-      size = 0;
-    }
-
-    setGridSize(size);
-    setGrid(createEmptyGrid(size));
-  };
-
   return (
     <div className={gridIsEmpty ? "" : "nonEmptyGrid"}>
+      <div className="controls flexDiv">
+        <button className="control" onClick={() => setGridSize(5)}>5x5</button>
+        <button className="control" onClick={() => setGridSize(10)}>10x10</button>
+        <button className="control" onClick={() => setGridSize(15)}>15x15</button>
+        <div className="control">
+          <input
+            value={gridSizeDisplay}
+            onChange={handleGridSizeChange}
+            onKeyPress={handleGridSizeKeyPress}
+            onBlur={handleGridSizeBlur}/>
+            x
+          <input
+            value={gridSizeDisplay}
+            onChange={handleGridSizeChange}
+            onKeyPress={handleGridSizeKeyPress}
+            onBlur={handleGridSizeBlur}/>
+        </div>
+        <div className="control">
+          <button className="control" onClick={handleResetClick}>Reset Grid</button>
+        </div>
+      </div>
       {grid.map((row, rowIndex) => {
         return (
           <Row
@@ -94,10 +145,6 @@ export const App = () => {
           />
         );
       })}
-      <br />
-      Grid size: <input value={gridSize} onChange={handleGridSizeChange} />
-      <br />
-      <button onClick={handleResetClick}>Reset Grid</button>
     </div>
   );
 };
