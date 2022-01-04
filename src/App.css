@@ -1,9 +1,10 @@
-.square, .square-enabled {
+.square,
+.square-enabled {
   height: 32px;
   flex-basis: 32px;
   border: 1px solid black;
   margin: 1px;
-  font-size: .5em;
+  font-size: 0.5em;
   display: flex;
   text-align: center;
   justify-content: center;
